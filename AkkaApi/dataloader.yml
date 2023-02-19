@@ -16,7 +16,8 @@ spec:
     spec:
       containers:
         - name: dataloader
-          image: my-dataloader:latest
+          image: my-spark:1.0
+          imagePullPolicy: Never  # or IfNotPresent
           ports:
             - containerPort: 9043
               name: http
@@ -31,10 +32,10 @@ metadata:
   labels:
     app: dataloader
 spec:
-  type: ClusterIP
   selector:
     app: dataloader
   ports:
-    - name: http
+    - protocol: TCP
       port: 9043
+      targetPort: 9043
 

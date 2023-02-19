@@ -26,7 +26,7 @@ object Main extends App  {
   implicit val executionContext: ExecutionContextExecutor = system.dispatcher
 
   val session = CqlSession.builder()
-    .addContactPoint(InetSocketAddress.createUnresolved("127.0.0.1", 9042))
+    .addContactPoint(InetSocketAddress.createUnresolved("cassandra", 9042))
     .withLocalDatacenter("datacenter1")
     .withAuthCredentials("cassandra", "cassandra")
     .build()

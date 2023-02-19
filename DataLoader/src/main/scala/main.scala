@@ -9,8 +9,8 @@ import com.datastax.spark.connector.cql.CassandraConnector
 object Main extends App {
   println("IT WORKS !")
   val conf = new SparkConf(true)
-    //.set("spark.cassandra.connection.host", "localhost")
-    //.set("spark.cassandra.connection.port", "9042")
+    .set("spark.cassandra.connection.host", "cassandra")
+    .set("spark.cassandra.connection.port", "9042")
     .set("spark.cassandra.auth.username", "cassandra")
     .set("spark.cassandra.auth.password", "cassandra")
     .setMaster("local[*]")
