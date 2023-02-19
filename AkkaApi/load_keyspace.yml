@@ -1,0 +1,30 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: cassandra-load-keyspace
+  labels:
+    app: cassandra-load-keyspace
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: cassandra-load-keyspace
+  template:
+    metadata:
+      labels:
+        app: cassandra-load-keyspace
+    spec:
+      containers:
+        - name: cassandra-load-keyspace
+          image: db:1.0
+          command: ["/bin/bash", "-c"]
+          args: ["sleep 100 && echo loading cassandra keyspace && cqlsh cassandra -u cassandra -p cassandra -f /create-table.cql"]
+          env:
+            - name: WAIT_HOSTS
+              value: "cassandra:9042"
+            - name: WAIT_HOSTS_TIMEOUT
+              value: "300"
+            - name: WAIT_SLEEP_INTERVAL
+              value: "30"
+            - name: WAIT_HOST_CONNECT_TIMEOUT
+              value: "30"
