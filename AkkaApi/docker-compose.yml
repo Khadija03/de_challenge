@@ -1,0 +1,38 @@
+version: "3"
+services:
+  cassandra:
+    container_name: database
+    image : db:1.0
+    build:
+      context : ./
+      dockerfile: Database.Dockerfile
+    ports:
+      - '9042:9042'
+  cassandra-load-keyspace:
+    container_name: cassandra-load-keyspace
+    image: db:1.0
+    depends_on:
+      - cassandra
+    command: /bin/bash -c "sleep 100 && echo loading cassandra keyspace && cqlsh cassandra -u cassandra -p cassandra -f /create-table.cql"
+    environment:
+      - WAIT_HOSTS=cassandra:9042
+      - WAIT_HOSTS_TIMEOUT=300
+      - WAIT_SLEEP_INTERVAL=30
+      - WAIT_HOST_CONNECT_TIMEOUT=30
+  api:
+    build: ./
+    ports:
+      - 8080:8080
+    network_mode: host
+    environment:
+      - WAIT_HOSTS=cassandra:9042
+      - WAIT_HOSTS_TIMEOUT=300
+      - WAIT_SLEEP_INTERVAL=60
+      - WAIT_HOST_CONNECT_TIMEOUT=30
+  dataloader:
+    build: ../DataLoader
+    ports:
+      - 9043:9043
+    depends_on:
+      - cassandra
+    network_mode: host
